@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">gif생성기</string>
+    <string name="site_url">https://0405junha-debug.github.io/ha/</string>
+    <string name="error_title">페이지를 불러오지 못했습니다</string>
+    <string name="error_message">인터넷 연결을 확인한 뒤 다시 시도해 주세요.</string>
+    <string name="retry">다시 시도</string>
+    <string name="download_started">다운로드를 시작합니다</string>
+    <string name="download_saved">저장됨: %1$s</string>
+    <string name="download_failed">저장에 실패했습니다</string>
+    <string name="file_chooser_title">동영상 또는 GIF 선택</string>
+</resources>

@@ -1,0 +1,57 @@
+name: Build APK
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build debug and release APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: "tools platform-tools platforms;android-35 build-tools;35.0.0"
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Accept Android SDK licenses
+        run: |
+          yes | sdkmanager --licenses >/dev/null 2>&1 || true
+
+      - name: Build APKs
+        run: ./gradlew assembleDebug assembleRelease --no-daemon --stacktrace
+
+      - name: Rename APKs
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/debug/app-debug.apk dist/gifmaker-debug.apk
+          cp app/build/outputs/apk/release/app-release.apk dist/gifmaker-release.apk
+          ls -lh dist
+
+      - name: Upload APK artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gifmaker-apk
+          path: dist/*.apk
+          if-no-files-found: error
+          retention-days: 30
